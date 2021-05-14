@@ -234,7 +234,8 @@ namespace harrypotter
 
         private static bool PlayerTurn(User user, List<Monster> monsters) // 플레이어 공격 턴
         {
-            bool actionFlag = false;
+            bool actionFlag = false; // 공격 또는 회복 아이템을 사용했다면 다음 단계로 넘어가고
+                                     // 그렇지 않다면 다시 행동을 선택한다.
             while (!actionFlag)
             {
                 Print("\n행동을 선택해주세요.");
@@ -251,14 +252,22 @@ namespace harrypotter
                     case '2': // 회복
                         if (user.item.Count > 0)
                         {
-                            if (user.hp == user.maxHp)
+                            if (user.hp >= user.maxHp)
                             {
                                 Print("이미 HP가 가득 차 있습니다.");
                                 actionFlag = false;
                             }
                             else
                             {
-                                user.hp += user.item[0].recovery;
+                                //유저의 hp + 회복값이 최대HP값보다 크면
+                                if (user.hp + user.item[0].recovery > user.maxHp)
+                                {
+                                    user.hp = user.maxHp;
+                                }
+                                else
+                                {
+                                    user.hp += user.item[0].recovery;
+                                }
                                 //user.mana += user.item[0].recovery;
                                 Print($"아이템을 사용했습니다. Hp가 회복됩니다. HP:{user.hp}/{user.maxHp}");
                                 actionFlag = true;
